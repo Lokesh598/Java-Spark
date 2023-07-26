@@ -33,15 +33,17 @@ public class CsvToKafkaAndCsvProcessor {
 
         mongoData.show();
 
-        /*Dataset<Row> joinedData = csvData.alias("csv").join(mongoData.alias("mongo"), csvData.col("_id").equalTo(mongoData.col("_id")));
+//        Dataset<Row> joinedData = csvData.alias("csv").join(mongoData.alias("mongo"), csvData.col("_id").equalTo(mongoData.col("_id")));
+//
+//        Dataset<Row> matchingRecords = joinedData.select("mongo._id", "mongo.licensePlate", "mongo.make", "mongo.model", "mongo.year");
+//
+//        Dataset<Row> nonMatchingRecords = csvData.alias("csv")
+//                .join(mongoData.alias("mongo"), csvData.col("_id").equalTo(mongoData.col("_id")), "left_anti")
+//                .select("csv._id");
 
-        Dataset<Row> matchingRecords = joinedData.select("mongo._id", "mongo.licensePlate", "mongo.make", "mongo.model", "mongo.year");
-
-        Dataset<Row> nonMatchingRecords = csvData.alias("csv")
-                .join(mongoData.alias("mongo"), csvData.col("_id").equalTo(mongoData.col("_id")), "left_anti")
-                .select("csv._id");*/
-
-        //left outer join
+        /**
+         * left outer join
+         */
 
         Dataset<Row> joinedData = csvData.alias("csv")
                 .join(mongoData.alias("mongo"), csvData.col("_id").equalTo(mongoData.col("_id")), "left_outer");
@@ -55,7 +57,7 @@ public class CsvToKafkaAndCsvProcessor {
                 .select("csv._id");
 
         publishCsvRecordsToKafkaTopic(matchingRecords);
-
+//Todo: rePartitions()
         nonMatchingRecords.write()
                 .format("csv")
                 .option("header", true)
@@ -78,7 +80,7 @@ public class CsvToKafkaAndCsvProcessor {
     private static java.util.Map<String,String> KafkaCsvConfig(){
         java.util.Map<String, String> kafkaConfigMap = new HashMap<>();
         kafkaConfigMap.put("kafka.bootstrap.servers","127.0.0.1:9092");
-        kafkaConfigMap.put("topic", "car_record_2");
+        kafkaConfigMap.put("topic", "car_record_3");
         return kafkaConfigMap;
     }
 }

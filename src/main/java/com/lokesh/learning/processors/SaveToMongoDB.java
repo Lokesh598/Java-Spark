@@ -24,7 +24,7 @@ public class SaveToMongoDB {
 
         carDF.write()
                 .format("mongo")
-                .option("uri", "mongodb://localhost:27017/spark.car")
+                .option("uri", "mongodb://localhost:27017/spark.car-data")
                 .save();
 
         spark.stop();
